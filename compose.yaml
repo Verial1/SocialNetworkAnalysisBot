@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # DATABASE SQL
+  db_sql:
+    image: postgres:18-slim
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: discord_data
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  # DATABASE A GRAFO
+  db_graph:
+    image: neo4j:5-community
+    container_name: neo4j_db
+    restart: always
+    environment:
+      NEO4J_AUTH: neo4j/password_segreta
+    ports:
+      - "7474:7474" # Dashboard per vedere i grafi
+      - "7687:7687" # Connessione Python
+    volumes:
+      - ./neo4j_data:/data
+
+  # BACKEND FASTAPI
+  backend:
+    build: ./backend
+    container_name: fastapi_backend
+    restart: on-failure
+    depends_on:
+      - db_sql
+      - db_graph
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://user:password@db_sql:5432/discord_data
+
+  # DISCORD BOT
+  bot:
+    build: ./bot
+    container_name: discord_bot
+    depends_on:
+      - backend
+    environment:
+      DISCORD_TOKEN: ${BOT_TOKEN}
+      API_URL: http://backend:8000
+
+  # FRONTEND VUE
+  frontend:
+    build: ./frontend
+    container_name: vue_frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+
+ # ANALISI: Quello che gira a mezzanotte (USA LA GPU!)
+  analysis:
+    build: ./analysis
+    container_name: analysis_engine
+    depends_on:
+      - db_sql
+      - db_graph
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      DATABASE_URL: postgresql://user:password@db_sql:5432/discord_data
