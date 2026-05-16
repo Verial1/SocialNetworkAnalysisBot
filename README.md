@@ -53,37 +53,30 @@ the containerized environment.
 
   - **Backend**: Python 3.12 + FastAPI.
   - **Databases**:
-      - **PostgreSQL 18**: Structured data, user consent management, and raw message
-        logs.
-      - **Neo4j 5**: Graph database for Social Network Analysis and relationship
-        mapping.
-  - **Frontend**: Vue.js 3 + TailwindCSS (Data visualization and "Spotify Wrapped"
-    style personal analytics).
-  - **AI/ML**: PyTorch, CLIP (Multimodal), and Unsloth/LoRA for efficient LLM
-    Fine-tuning on local hardware (most likely, still in need to be precisely defined).
+      - **PostgreSQL 18**: Structured data, user consent management, and raw message logs.
+      - **Neo4j 5**: Graph database for Social Network Analysis and relationship mapping.
+  - **Frontend**: Vue.js 3 + TailwindCSS (Data visualization and "Spotify Wrapped" style personal analytics).
+  - **AI/ML**: PyTorch, CLIP (Multimodal), and Unsloth/LoRA for efficient LLM Fine-tuning on local hardware (most likely, still in need to be precisely defined).
 
 ## Project Structure
 
 SocialNetworkAnalysisBot/
-├── compose.yaml           # Docker orchestration (DBs, API, Bot, AI)
-├── .env                   # Environment variables & Secrets (Git-ignored)
-├── .dockerignore          # Excludes local files from Docker builds
-├── backend/               # FastAPI application logic
-├── bot/                   # Discord gateway hook & event listeners
-├── analysis/              # Batch processing & AI engine (GPU-dependent)
-├── frontend/              # Vue.js dashboard for SNA visualization
-└── data/                  # Persistent storage for SQL data
+├── compose.yaml           # Docker orchestration (DBs, API, Bot, AI) 
+├── .env                   # Environment variables & Secrets (Git-ignored)  
+├── .dockerignore          # Excludes local files from Docker builds  
+├── backend/               # FastAPI application logic  
+├── bot/                   # Discord gateway hook & event listeners 
+├── analysis/              # Batch processing & AI engine (GPU-dependent) 
+├── frontend/              # Vue.js dashboard for SNA visualization 
+└── data/                  # Persistent storage for SQL data  
 
 ## Privacy & Ethics (GDPR Compliance)
 
 This project will implement Privacy by Design:
 
-1.  **Strict** Consent: No data is collected or processed for users who do not
-    explicitly opt-in via the /consent command.
-2.  **Right to be Forgotten**: Users can invoke the /obliterate command to perform a
-    CASCADE DELETE of all their data across SQL and Graph databases.
-3.  **Local Processing**: All data is stored and processed locally on the owner's
-    hardware; no data is sold or transmitted to 3rd party AI providers.
+1.  **Strict Consent**: No data is collected or processed for users who do not explicitly opt-in via the /consent command.
+2.  **Right to be Forgotten**: Users can invoke the /obliterate command to perform a CASCADE DELETE of all their data across SQL and Graph databases.
+3.  **Local Processing**: All data is stored and processed locally on the owner's hardware; no data is sold or transmitted to 3rd party AI providers.
 4.  **Full ID Anonymization**: Every Discord ID is salted and hashed (SHA-256) before entering the database. This ensures that no real Discord IDs are ever stored, providing a layer of protection even in the event of a data breach.
 
 Initial tests of the code will be perfomed on users' messages who have explicitly given consent.
