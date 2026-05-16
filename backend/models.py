@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, BigInteger, Text, DateTime, Boolean, Fore
 from database import Base
 import datetime
 
-# All ids are hash
+# All ids are hashed
 
 class Users(Base):
     __tablename__ = "users"
