@@ -60,7 +60,7 @@ the containerized environment.
 
 ## Project Structure
 
-SocialNetworkAnalysisBot/
+SocialNetworkAnalysisBot/                                                                                                                                               
 ├── compose.yaml           # Docker orchestration (DBs, API, Bot, AI)                                                                                                                                                     
 ├── .env                   # Environment variables & Secrets (Git-ignored)                                                                                                                                           
 ├── .dockerignore          # Excludes local files from Docker builds                                                                                                                                                   
