@@ -8,12 +8,12 @@ stylistic imitation.
 
 ## Research Areas
 
-  - Social Network Analysis (SNA): Temporal network drift, community detection,
+  - **Social Network Analysis (SNA)**: Temporal network drift, community detection,
     and centrality mapping (identifying "bridge" users and core hubs).
-  - Natural Language Processing (NLP): Linguistic convergence over time,
+  - **Natural Language Processing (NLP)**: Linguistic convergence over time,
     inside-joke identification, and communicative style imitation via Fine-tuned
     LLMs.
-  - Computer Vision (CV): Multimodal context enrichment by analyzing images,
+  - **Computer Vision (CV)**: Multimodal context enrichment by analyzing images,
     GIFs, and shared links using CLIP-based embeddings.
 
 ## Infrastructure & Hardware Setup
@@ -23,10 +23,21 @@ GPU-accelerated workloads.
 
 Current Progress: Environment Fully Configured
 
-  - OS/Environment: Windows 11 + WSL2 (Ubuntu 24.04 LTS).
-  - Orchestration: Docker Compose with NVIDIA Container Toolkit integration.
-  - GPU Acceleration: Hardware-passthrough for NVIDIA RTX 2070 Super (8GB VRAM).
-  - Drivers: NVIDIA Game Ready Drivers (v596.49+) supporting CUDA 13.2.
+  - **OS/Environment**: Windows 11 + WSL2 (Ubuntu 24.04 LTS).
+  - **Orchestration**: Docker Compose with NVIDIA Container Toolkit integration.
+  - **GPU Acceleration**: Hardware-passthrough for NVIDIA RTX 2070 Super (8GB VRAM).
+  - **Drivers**: NVIDIA Game Ready Drivers (v596.49+) supporting CUDA 13.2.
+
+## PostgreSQL Database Design (4NF)
+The relational schema is normalized to the Fourth Normal Form (4NF) to ensure data integrity and scalability in a multi-tenant environment.
+
+![Database Schema](./docs/postgre_schema.png)
+
+**Key Features:**
+- **Multi-Tenancy:** Composite Primary Keys (`user_id`, `server_id`) allow for server-specific user profiles (nicknames/avatars).
+- **SNA Ready:** A dedicated `mentions` table handles 1-to-1 relationships, with special handling for global mentions (`everyone` as `-1`, `here` as `-2`).
+- **Vector Search:** `multimedia_content` will likely use the **pgvector** extension to store and query high-dimensional CLIP embeddings without storing raw files on disk.
+- **Processing Pipeline:** An `is_processed` flag in the `messages` table manages the incremental batch analysis for the AI engine.
 
 ## GPU Passthrough Verification
 
@@ -40,15 +51,15 @@ the containerized environment.
 
 ## Tech Stack
 
-  - Backend: Python 3.12 + FastAPI.
-  - Databases:
-      - PostgreSQL 18: Structured data, user consent management, and raw message
+  - **Backend**: Python 3.12 + FastAPI.
+  - **Databases**:
+      - **PostgreSQL 18**: Structured data, user consent management, and raw message
         logs.
-      - Neo4j 5: Graph database for Social Network Analysis and relationship
+      - **Neo4j 5**: Graph database for Social Network Analysis and relationship
         mapping.
-  - Frontend: Vue.js 3 + TailwindCSS (Data visualization and "Spotify Wrapped"
+  - **Frontend**: Vue.js 3 + TailwindCSS (Data visualization and "Spotify Wrapped"
     style personal analytics).
-  - AI/ML: PyTorch, CLIP (Multimodal), and Unsloth/LoRA for efficient LLM
+  - **AI/ML**: PyTorch, CLIP (Multimodal), and Unsloth/LoRA for efficient LLM
     Fine-tuning on local hardware (most likely, still in need to be precisely defined).
 
 ## Project Structure
@@ -67,12 +78,13 @@ SocialNetworkAnalysisBot/
 
 This project will implement Privacy by Design:
 
-1.  Strict Consent: No data is collected or processed for users who do not
+1.  **Strict** Consent: No data is collected or processed for users who do not
     explicitly opt-in via the /consent command.
-2.  Right to be Forgotten: Users can invoke the /obliterate command to perform a
+2.  **Right to be Forgotten**: Users can invoke the /obliterate command to perform a
     CASCADE DELETE of all their data across SQL and Graph databases.
-3.  Local Processing: All data is stored and processed locally on the owner's
+3.  **Local Processing**: All data is stored and processed locally on the owner's
     hardware; no data is sold or transmitted to 3rd party AI providers.
+4.  **Full ID Anonymization**: Every Discord ID is salted and hashed (SHA-256) before entering the database. This ensures that no real Discord IDs are ever stored, providing a layer of protection even in the event of a data breach.
 
 Initial tests of the code will be perfomed on users' messages who have explicitly given consent.
 
