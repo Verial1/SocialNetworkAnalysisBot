@@ -102,7 +102,7 @@ Initial tests of the code will be perfomed on users' messages who have explicitl
 If you want to run the entire suite as a standalone containerized system:
     docker compose up --build
 
-📈 Roadmap
+## Roadmap
 
 - [x] Infrastructure setup (WSL2, Docker, CUDA Passthrough)
 - [ ] Database Schema design (PostgreSQL + Neo4j)
@@ -113,13 +113,3 @@ If you want to run the entire suite as a standalone containerized system:
 
 Date: May 2026
 Author: [Nichole A.]
-
-Suggested First Commit:
-
-Now that you have this file, you can commit it:
-
-git init
-git add README.md
-git commit -m "docs: initialize readme with hardware and cuda 13.2 setup"
-
-Next step: Shall we define the PostgreSQL schema to start saving the messages?
