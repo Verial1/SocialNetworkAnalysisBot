@@ -1,0 +1,29 @@
+# Git
+.git
+.gitignore
+
+# Environment & Secrets
+.env
+.venv
+venv
+env
+
+# Python cache
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# Databases & Persistence (Local data)
+postgres_data/
+neo4j_data/
+
+# Frontend/Node
+**/node_modules
+**/dist
+**/npm-debug.log
+
+# IDEs & System
+.vscode/
+.idea/
+.DS_Store
