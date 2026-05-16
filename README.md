@@ -61,14 +61,14 @@ the containerized environment.
 ## Project Structure
 
 SocialNetworkAnalysisBot/
-├── compose.yaml           # Docker orchestration (DBs, API, Bot, AI)                                                                                                                                                                                                   
-├── .env                   # Environment variables & Secrets (Git-ignored)                                                                                                                                                                                         
-├── .dockerignore          # Excludes local files from Docker builds                                                                                                                                                                                                    
-├── backend/               # FastAPI application logic                                                                                                                                                                                                              
-├── bot/                   # Discord gateway hook & event listeners                                                                                                                                                                                                 
-├── analysis/              # Batch processing & AI engine (GPU-dependent)                                                                                                                                                                                             
-├── frontend/              # Vue.js dashboard for SNA visualization                                                                                                                                                                                                     
-└── data/                  # Persistent storage for SQL data                                                                                                                                                                                                            
+├── compose.yaml           # Docker orchestration (DBs, API, Bot, AI)                                                                                                                                                     
+├── .env                   # Environment variables & Secrets (Git-ignored)                                                                                                                                           
+├── .dockerignore          # Excludes local files from Docker builds                                                                                                                                                   
+├── backend/               # FastAPI application logic                                                                                                                                                             
+├── bot/                   # Discord gateway hook & event listeners                                                                                                                                             
+├── analysis/              # Batch processing & AI engine (GPU-dependent)                                                                                                                                  
+├── frontend/              # Vue.js dashboard for SNA visualization                                                                                                                                     
+└── data/                  # Persistent storage for SQL data                                                                                                                                                
 
 ## Privacy & Ethics (GDPR Compliance)
 
