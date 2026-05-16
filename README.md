@@ -1,2 +1,125 @@
-# SocialNetworkAnalysisBot
-A SNA, NLP and Computer Vision bot for discord
+# Discord Social Network Analysis & AI Suite
+
+A high-performance research project designed to analyze Social Network dynamics,
+Natural Language patterns, and Computer Vision contexts within Discord
+communities. This project is not just a bot, but a full-stack application
+leveraging AI to understand community drift, linguistic convergence, and
+stylistic imitation.
+
+## Research Areas
+
+  - Social Network Analysis (SNA): Temporal network drift, community detection,
+    and centrality mapping (identifying "bridge" users and core hubs).
+  - Natural Language Processing (NLP): Linguistic convergence over time,
+    inside-joke identification, and communicative style imitation via Fine-tuned
+    LLMs.
+  - Computer Vision (CV): Multimodal context enrichment by analyzing images,
+    GIFs, and shared links using CLIP-based embeddings.
+
+## Infrastructure & Hardware Setup
+
+The project is built on a high-performance local stack, optimized for
+GPU-accelerated workloads.
+
+Current Progress: Environment Fully Configured
+
+  - OS/Environment: Windows 11 + WSL2 (Ubuntu 24.04 LTS).
+  - Orchestration: Docker Compose with NVIDIA Container Toolkit integration.
+  - GPU Acceleration: Hardware-passthrough for NVIDIA RTX 2070 Super (8GB VRAM).
+  - Drivers: NVIDIA Game Ready Drivers (v596.49+) supporting CUDA 13.2.
+
+## GPU Passthrough Verification
+
+The environment successfully communicates between the Windows Host, WSL2, and
+isolated Docker containers. Verified via:
+
+docker run --rm --gpus all nvidia/cuda:13.2.0-base-ubuntu22.04 nvidia-smi
+
+Status: Confirmed. GPU Utility and Memory mapping are fully operational within
+the containerized environment.
+
+## Tech Stack
+
+  - Backend: Python 3.12 + FastAPI.
+  - Databases:
+      - PostgreSQL 18: Structured data, user consent management, and raw message
+        logs.
+      - Neo4j 5: Graph database for Social Network Analysis and relationship
+        mapping.
+  - Frontend: Vue.js 3 + TailwindCSS (Data visualization and "Spotify Wrapped"
+    style personal analytics).
+  - AI/ML: PyTorch, CLIP (Multimodal), and Unsloth/LoRA for efficient LLM
+    Fine-tuning on local hardware (most likely, still in need to be precisely defined).
+
+## Project Structure
+
+SocialNetworkAnalysisBot/
+├── compose.yaml           # Docker orchestration (DBs, API, Bot, AI)
+├── .env                   # Environment variables & Secrets (Git-ignored)
+├── .dockerignore          # Excludes local files from Docker builds
+├── backend/               # FastAPI application logic
+├── bot/                   # Discord gateway hook & event listeners
+├── analysis/              # Batch processing & AI engine (GPU-dependent)
+├── frontend/              # Vue.js dashboard for SNA visualization
+└── data/                  # Persistent storage for SQL data
+
+## Privacy & Ethics (GDPR Compliance)
+
+This project will implement Privacy by Design:
+
+1.  Strict Consent: No data is collected or processed for users who do not
+    explicitly opt-in via the /consent command.
+2.  Right to be Forgotten: Users can invoke the /obliterate command to perform a
+    CASCADE DELETE of all their data across SQL and Graph databases.
+3.  Local Processing: All data is stored and processed locally on the owner's
+    hardware; no data is sold or transmitted to 3rd party AI providers.
+
+Initial tests of the code will be perfomed on users' messages who have explicitly given consent.
+
+## How to Run (Development)
+
+1.  Clone the repo inside your WSL2 home directory (for optimal I/O
+    performance).
+2.  Configure Secrets: Create a .env file based on .env.example.
+3.  Launch Databases:
+    docker compose up -d db_sql db_graph
+4.  Development Local Environments:
+        For the backend:
+            cd backend
+            python3 -m venv venv && source venv/bin/activate
+            pip install -r requirements.txt
+            uvicorn main:app --reload
+        For the discord bot:
+            cd ../bot
+            python3 -m venv venv && source venv/bin/activate
+            pip install -r requirements.txt
+            python bot.py
+        For the AI Analysis Engine:
+            cd ../analysis
+            python3 -m venv venv && source venv/bin/activate
+            pip install -r requirements.txt
+
+If you want to run the entire suite as a standalone containerized system:
+    docker compose up --build
+
+📈 Roadmap
+
+- [x] Infrastructure setup (WSL2, Docker, CUDA Passthrough)
+- [ ] Database Schema design (PostgreSQL + Neo4j)
+- [ ] API Development (FastAPI)
+- [ ] Discord Bot Gateway & Consent Management
+- [ ] Batch Analysis Engine (NLP/CV Integration)
+- [ ] LLM Fine-tuning for Style Imitation
+
+Date: May 2026
+Author: [Nichole A.]
+
+Suggested First Commit:
+
+Now that you have this file, you can commit it:
+
+git init
+git add README.md
+git commit -m "docs: initialize readme with hardware and cuda 13.2 setup"
+
+Next step: Shall we define the PostgreSQL schema to start saving the messages?
