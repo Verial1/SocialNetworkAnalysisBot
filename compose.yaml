@@ -44,7 +44,7 @@ services:
     depends_on:
       - backend
     environment:
-      DISCORD_TOKEN: ${BOT_TOKEN}
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
       API_URL: http://backend:8000
 
   # FRONTEND VUE
