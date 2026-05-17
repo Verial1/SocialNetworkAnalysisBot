@@ -110,9 +110,10 @@ If you want to run the entire suite as a standalone containerized system:
 ## Roadmap
 
 - [x] Infrastructure setup (WSL2, Docker, CUDA Passthrough)
-- [ ] Database Schema design (PostgreSQL + Neo4j)
+- [x] Database Schema design (PostgreSQL)
 - [ ] API Development (FastAPI)
 - [ ] Discord Bot Gateway & Consent Management
+- [ ] Database Schema design (Neo4j)
 - [ ] Batch Analysis Engine (NLP/CV Integration)
 - [ ] LLM Fine-tuning for Style Imitation
 
