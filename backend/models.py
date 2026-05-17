@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, BigInteger, Text, DateTime, Boolean, ForeignKey, PrimaryKeyConstraint, ForeignKeyConstraint, SmallInteger, ARRAY, Float
+from sqlalchemy import Column, String, BigInteger, Text, DateTime, Boolean, ForeignKey, PrimaryKeyConstraint, ForeignKeyConstraint, SmallInteger, ARRAY, Float, Index
 from database import Base
 import datetime
 
@@ -29,14 +29,14 @@ class Servers(Base):
 class Messages(Base):
     __tablename__ = "messages"
 
-    message_id = Column(BigInteger, primary_key=True)
+    message_id = Column(String(64), primary_key=True)
     text_content = Column(Text, nullable=True)
     date = Column(DateTime, default=datetime.datetime.now)
     user_id = Column(String(64), nullable=False)
     server_id = Column(String(64), ForeignKey("servers.server_id", ondelete="CASCADE"), nullable=False)
     
     # message_id to which the message responds
-    responds_to = Column(BigInteger, nullable=True)
+    responds_to = Column(String(64), nullable=True)
     is_processed = Column(Boolean, default=False)
 
     __table_args__ = (
@@ -74,3 +74,7 @@ class Mentions(Base):
     __table_args__ = (
         PrimaryKeyConstraint('message_id', 'user_id'),
     )
+
+# Indexes
+messages_processed_index = Index('processed', Messages.is_processed)
+messages_server_index = Index('server', Messages.server_id)
