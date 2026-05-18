@@ -46,6 +46,7 @@ services:
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       API_URL: http://backend:8000
+      PYTHONUNBUFFERED: 1
 
   # FRONTEND VUE
   frontend:
