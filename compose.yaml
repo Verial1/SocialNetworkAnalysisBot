@@ -45,6 +45,7 @@ services:
       - backend
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
+      DISCORD_URL: ${DISCORD_URL}
       API_URL: http://backend:8000
       PYTHONUNBUFFERED: 1
 
