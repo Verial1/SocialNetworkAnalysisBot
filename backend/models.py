@@ -12,7 +12,7 @@ class Users(Base):
     
     server_username = Column(String, nullable=False)
     server_picture = Column(String, nullable=True)
-    latest_message_id = Column(BigInteger, nullable=False)
+    latest_message_id = Column(BigInteger, nullable=True)
 
     # Composite PK
     __table_args__ = (
