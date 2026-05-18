@@ -12,6 +12,7 @@ class Users(Base):
     
     server_username = Column(String, nullable=False)
     server_picture = Column(String, nullable=True)
+    latest_message_id = Column(BigInteger, nullable=False)
 
     # Composite PK
     __table_args__ = (
@@ -51,7 +52,7 @@ class Messages(Base):
 class MultimediaContent(Base):
     __tablename__ = "multimedia_content"
 
-    message_id = Column(BigInteger, ForeignKey("messages.message_id", ondelete="CASCADE"), nullable=False)
+    message_id = Column(String(64), ForeignKey("messages.message_id", ondelete="CASCADE"), nullable=False)
     index = Column(SmallInteger, nullable=False)
 
     type = Column(String, nullable=False)        # "image", "gif", "video"
@@ -67,7 +68,7 @@ class MultimediaContent(Base):
 class Mentions(Base):
     __tablename__ = "mentions"
 
-    message_id = Column(BigInteger, ForeignKey("messages.message_id", ondelete="CASCADE"), nullable=False)
+    message_id = Column(String(64), ForeignKey("messages.message_id", ondelete="CASCADE"), nullable=False)
     user_id = Column(String(64), nullable=False) # Mentioned user's id
 
     # Composite PK
