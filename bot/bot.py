@@ -5,6 +5,7 @@ import httpx
 import asyncio
 from clean import clean_message
 import random
+from datetime import datetime
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -19,7 +20,7 @@ client = discord.Client(intents=intents)
 async def on_ready():
     print(f'We have logged in as {client.user}')
     print(str(DISCORD_URL))
-    await message_history(guild_id=str(724405288731541526), author_id=str(1247659397916917861), limit=25, min_id=str(1247666743070036048))
+    await message_history(guild_id=str(724405288731541526), author_id=str(461637314276360204), limit=25, min_id=str(848592092623929375), debug=True)
 
 
 @client.event
@@ -33,7 +34,7 @@ async def on_message(message):
 # min_id optional, as such, if a user is just added with no saved messages (Null in the DB), we can start getting messages from oldest to latest
 # if len(batch) is empty, finished messages (up to date)
 # i get rate limited, why?
-async def message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25):
+async def message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25, debug: bool = False):
     all_messages = []
     retries_202 = 0
     max_retries_202 = 5
@@ -53,15 +54,28 @@ async def message_history(guild_id: str, author_id: str, min_id: str = "-1", lim
 
     async with httpx.AsyncClient() as http_client:
         while True:
-            await asyncio.sleep(random.uniform(0.6, 1.0)) 
+            if debug:
+                now = datetime.now().strftime("%H:%M:%S:%f")
+                print("\nRequest time: " + str(now))
+
             response = await http_client.get(url, headers=headers, params=params)
+
+            if debug:
+                print("Status code: " + str(response.status_code))
+                print("Limit: " + str(response.headers.get("X-RateLimit-Limit")))
+                print("Remaining: " + str(response.headers.get("X-RateLimit-Remaining")))
+                print("Reset-After: " + str(response.headers.get("X-RateLimit-Reset-After")))
+                print("Bucket: " + str(response.headers.get("X-RateLimit-Bucket")))
+                print("Scope: " + str(response.headers.get("X-RateLimit-Scope")))
+                print("retry_after: " + str(response.json().get("retry_after")))
 
             if response.status_code == 429:
                 data = response.json()
-                wait_time = data.get("retry_after", 5)  + random.uniform(0.3, 0.6)
+                wait_time = data.get("retry_after", 5)
                 is_global = data.get("global", False)
                 
-                print(f"Rate Limit {'GLOBAL' if is_global else 'Path'}. Wait: {wait_time}s")
+                if debug:
+                    print(f"Rate Limit {'GLOBAL' if is_global else 'Path'}. Wait: {wait_time}s")
                 await asyncio.sleep(wait_time)
                 continue
 
@@ -80,7 +94,7 @@ async def message_history(guild_id: str, author_id: str, min_id: str = "-1", lim
             
             elif response.status_code == 202:
                 if retries_202 < max_retries_202:
-                    wait_time = response.json().get("retry_after", 5) + random.uniform(0.3, 0.6)
+                    wait_time = response.json().get("retry_after", 5)
                     print(f"Discord is indexing... Wait: {wait_time}s")
                     await asyncio.sleep(wait_time)
                     retries_202 += 1
@@ -95,9 +109,10 @@ async def message_history(guild_id: str, author_id: str, min_id: str = "-1", lim
             
             remaining = response.headers.get("X-RateLimit-Remaining")
             if remaining == "0":
-                reset_after = float(response.headers.get("X-RateLimit-Reset-After", 1)) + random.uniform(0.3, 0.6)
+                reset_after = float(response.headers.get("X-RateLimit-Reset-After", 1))
                 print(f"Bucket finished. Pausing {reset_after}s")
                 await asyncio.sleep(reset_after)
+    
     print(all_messages)
     return all_messages
 
