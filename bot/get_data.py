@@ -9,10 +9,20 @@ load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 DISCORD_URL = os.getenv("DISCORD_URL")
 
+async def get_servers():
+    j = 1
+    # to define
+
+async def get_user(user_id: str):
+    url = str(DISCORD_URL) + "/users/" + "@" + user_id + "/guilds"
+    j = 1
+    # to define
+
+
 # min_id optional, as such, if a user is just added with no saved messages (Null in the DB), we can start getting messages from oldest to latest
 # if len(batch) is empty, finished messages (up to date)
 # i get rate limited, why?
-async def fetch_message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25, debug: bool = False):
+async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25, debug: bool = False):
     all_messages = []
     retries_202 = 0
     max_retries_202 = 5
@@ -45,7 +55,7 @@ async def fetch_message_history(guild_id: str, author_id: str, min_id: str = "-1
                 print("Bucket: " + str(response.headers.get("X-RateLimit-Bucket")))
                 print("Scope: " + str(response.headers.get("X-RateLimit-Scope")))
                 print("retry_after: " + str(response.json().get("retry_after")))
-                print("global: " + str(data.get("global", False)))
+                print("global: " + str(response.json().get("global")))
 
             if response.status_code == 429:
                 data = response.json()
