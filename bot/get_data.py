@@ -2,13 +2,14 @@ import httpx
 import asyncio
 from datetime import datetime
 from dotenv import load_dotenv
-from clean import clean_message
+from clean import clean_message, clean_self_server
 import os
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 DISCORD_URL = os.getenv("DISCORD_URL")
 
+# Gets bot's id (is it useful lol?)
 async def get_self():
     self_id = None
     retries_202 = 0
@@ -50,16 +51,56 @@ async def get_self():
                 break
     return self_id
 
+# Gets bot's server/guild ids
+async def get_self_servers():
+    servers = []
+    retries_202 = 0
+    max_retries_202 = 5
 
+    url = str(DISCORD_URL) + "/users/@me/guilds"
+    headers = {
+        "Authorization": "Bot " + str(DISCORD_TOKEN)
+    }
+    params = {}
+
+    async with httpx.AsyncClient() as http_client:
+        while True:
+            response = await http_client.get(url, headers=headers, params=params)
+
+            if response.status_code == 429:
+                data = response.json()
+                wait_time = data.get("retry_after", 5)
+                await asyncio.sleep(wait_time)
+                continue
+
+            elif response.status_code == 202:
+                if retries_202 < max_retries_202:
+                    wait_time = response.json().get("retry_after", 5)
+                    print(f"Discord is indexing... Wait: {wait_time}s")
+                    await asyncio.sleep(wait_time)
+                    retries_202 += 1
+                    continue
+                else:
+                    print("Timeout Discord indexing.")
+                    break
+
+            elif response.status_code == 200:
+                batch = response.json()
+                for elem in batch:
+                    cleaned = clean_self_server(elem)
+                    servers.append(cleaned)
+                break
+
+            else:
+                print("Error: " + str(response.status_code) + " - " + response.text)
+                break
+    
+    return servers
+
+# Gets user's data TO BE DEFINED
 async def get_user():
     j = 1
     # to define
-
-async def get_servers(user_id: str):
-    url = str(DISCORD_URL) + "/users/" + "@" + user_id + "/guilds"
-    j = 1
-    # to define
-
 
 # min_id optional, as such, if a user is just added with no saved messages (Null in the DB), we can start getting messages from oldest to latest
 # if len(batch) is empty, finished messages (up to date)
