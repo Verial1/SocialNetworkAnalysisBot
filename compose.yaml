@@ -58,7 +58,7 @@ services:
     depends_on:
       - backend
 
- # ANALISI: Quello che gira a mezzanotte (USA LA GPU!)
+ # ANALISI
   analysis:
     build: ./analysis
     container_name: analysis_engine
