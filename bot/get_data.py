@@ -98,9 +98,18 @@ async def get_self_servers():
     return servers
 
 # Gets user's data TO BE DEFINED
-async def get_user():
+async def get_user_data():
     j = 1
     # to define
+
+# Gets server's data TPO BE DEFINED
+async def get_server_data():
+    j = 1
+    # to define
+
+# Get users from server, or get users from discord reaction?
+
+
 
 # min_id optional, as such, if a user is just added with no saved messages (Null in the DB), we can start getting messages from oldest to latest
 # if len(batch) is empty, finished messages (up to date)
