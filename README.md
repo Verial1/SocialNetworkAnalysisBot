@@ -1,6 +1,6 @@
 # Discord Social Network Analysis & AI Suite
 
-A high-performance research project designed to analyze Social Network dynamics,
+A high-performance project designed to analyze Social Network dynamics,
 Natural Language patterns, and Computer Vision contexts within Discord
 communities. This project is not just a bot, but a full-stack application
 leveraging AI to understand community drift, linguistic convergence, and
@@ -83,29 +83,7 @@ Initial tests of the code will be perfomed on users' messages who have explicitl
 
 ## How to Run (Development)
 
-1.  Clone the repo inside your WSL2 home directory (for optimal I/O
-    performance).
-2.  Configure Secrets: Create a .env file based on .env.example.
-3.  Launch Databases:
-    docker compose up -d db_sql db_graph
-4.  Development Local Environments:
-        For the backend:
-            cd backend
-            python3 -m venv venv && source venv/bin/activate
-            pip install -r requirements.txt
-            uvicorn main:app --reload
-        For the discord bot:
-            cd ../bot
-            python3 -m venv venv && source venv/bin/activate
-            pip install -r requirements.txt
-            python bot.py
-        For the AI Analysis Engine:
-            cd ../analysis
-            python3 -m venv venv && source venv/bin/activate
-            pip install -r requirements.txt
-
-If you want to run the entire suite as a standalone containerized system:
-    docker compose up --build
+Still to define
 
 ## Roadmap
 
