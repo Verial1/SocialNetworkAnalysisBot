@@ -2,7 +2,7 @@ import httpx
 import asyncio
 from datetime import datetime
 from dotenv import load_dotenv
-from clean import clean_message, clean_self_server
+from clean import clean_message, clean_self_server, clean_user
 import os
 
 load_dotenv()
@@ -33,7 +33,8 @@ async def get_self():
 
             elif response.status_code == 202:
                 if retries_202 < max_retries_202:
-                    wait_time = response.json().get("retry_after", 5)
+                    data = response.json>()
+                    wait_time = data.get("retry_after", 5)
                     print(f"Discord is indexing... Wait: {wait_time}s")
                     await asyncio.sleep(wait_time)
                     retries_202 += 1
@@ -75,7 +76,8 @@ async def get_self_servers():
 
             elif response.status_code == 202:
                 if retries_202 < max_retries_202:
-                    wait_time = response.json().get("retry_after", 5)
+                    data = response.json()
+                    wait_time = data.get("retry_after", 5)
                     print(f"Discord is indexing... Wait: {wait_time}s")
                     await asyncio.sleep(wait_time)
                     retries_202 += 1
@@ -97,10 +99,50 @@ async def get_self_servers():
     
     return servers
 
-# Gets user's data TO BE DEFINED
-async def get_user_data():
-    j = 1
-    # to define
+# Gets user's data in a specified server
+async def get_user_data(user_id: str, guild_id: str):
+    user_data = None
+    retries_202 = 0
+    max_retries_202 = 5
+    
+    url = str(DISCORD_URL) + "/guilds/" + str(guild_id) + "/members/" + str(user_id)
+    headers = {
+        "Authorization": "Bot " + str(DISCORD_TOKEN)
+    }
+    params = {}
+
+    async with httpx.AsyncClient() as http_client:
+        while True:
+            response = await http_client.get(url, headers=headers, params=params)
+
+            if response.status_code == 429:
+                data = response.json()
+                wait_time = data.get("retry_after", 5)
+                await asyncio.sleep(wait_time)
+                continue
+
+            elif response.status_code == 202:
+                if retries_202 < max_retries_202:
+                    data = response.json>()
+                    wait_time = data.get("retry_after", 5)
+                    print(f"Discord is indexing... Wait: {wait_time}s")
+                    await asyncio.sleep(wait_time)
+                    retries_202 += 1
+                    continue
+                else:
+                    print("Timeout Discord indexing.")
+                    break
+
+            elif response.status_code == 200:
+                data = response.json()
+                user_data = clean_user(data)
+                print(user_data)
+                break
+
+            else:
+                print("Error: " + str(response.status_code) + " - " + response.text)
+                break
+    return user_data
 
 # Gets server's data TPO BE DEFINED
 async def get_server_data():
