@@ -48,4 +48,7 @@ def clean_user(elem):
     }
 
 def clean_guild(elem):
-    j=1
+    return{
+        "name": elem.get("name"),
+        "picture": elem.get("icon"),
+    }
