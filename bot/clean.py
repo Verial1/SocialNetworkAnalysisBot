@@ -36,3 +36,16 @@ def clean_message(elem):
         "responds_to": get_hashed_id(str(msg.get("message_reference", {}).get("message_id"))) 
                        if msg.get("message_reference") else None
     }
+
+def clean_user(elem):
+    server_picture = elem.get("avatar")
+    if server_picture == None:
+        server_picture = elem.get("user", {}).get("avatar")
+
+    return{
+        "server_username": elem.get("nick"),
+        "server_picture": server_picture
+    }
+
+def clean_guild(elem):
+    j=1
