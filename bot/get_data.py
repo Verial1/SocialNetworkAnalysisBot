@@ -9,6 +9,7 @@ load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 DISCORD_URL = os.getenv("DISCORD_URL")
 
+# --- BOT ---
 # Gets bot's id (is it useful lol?)
 async def get_self():
     self_id = None
@@ -99,6 +100,7 @@ async def get_self_servers():
     
     return servers
 
+# --- USER ---
 # Gets user's data in a specified server
 async def get_user_data(user_id: str, guild_id: str):
     user_data = None
@@ -144,6 +146,7 @@ async def get_user_data(user_id: str, guild_id: str):
                 break
     return user_data
 
+# --- SERVER/GUILD ---
 # Gets server's data
 async def get_server_data(guild_id: str):
     server_data = None
@@ -188,11 +191,8 @@ async def get_server_data(guild_id: str):
                 break
     return server_data
 
-# Get users from server, or get users from discord reaction?
-
-
-
-# min_id optional, as such, if a user is just added with no saved messages (Null in the DB), we can start getting messages from oldest to latest
+# --- MESSAGE HISTORY ---
+# min_id optional, as such, if a user has just been added with no saved messages (Null in the DB), we can start getting messages from oldest to latest
 # if len(batch) is empty, finished messages (up to date)
 # i get rate limited, why?
 async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25, debug: bool = False):
