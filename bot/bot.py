@@ -32,6 +32,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    
     if message.author == client.user:
         return
 
@@ -42,7 +43,7 @@ async def on_message(message):
         else:
             await message.channel.send('Consent already given by: ' + str(message.author.name))
 
-    if message.content.startswith('/revoke'):
+    if "/revoke" in message.content and "/revokeall" not in message.content:
         pattern = r'^/revoke\s+(\d{17,19})'
         match = re.search(pattern, message.content)
 
@@ -57,7 +58,7 @@ async def on_message(message):
         else:
             await message.channel.send('No consent has been given in this guild in the past.')
 
-    if message.content.startswith('/revokeall'):
+    if "/revokeall" in message.content:
         res = revoke_user_consent_all(user_id=str(message.author.id))
         if res:
             await message.channel.send('Succefully revoked ' + str(message.author.name) + '\'s consent from all servers.')
