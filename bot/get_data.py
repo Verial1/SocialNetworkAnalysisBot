@@ -9,12 +9,13 @@ load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 DISCORD_URL = os.getenv("DISCORD_URL")
 
+MAX_RETRIES_202 = 5
+
 # --- BOT ---
 # Gets bot's id (is it useful lol?)
 async def get_self():
     self_id = None
     retries_202 = 0
-    max_retries_202 = 5
     
     url = str(DISCORD_URL) + "/users/@me"
     headers = {
@@ -33,7 +34,7 @@ async def get_self():
                 continue
 
             elif response.status_code == 202:
-                if retries_202 < max_retries_202:
+                if retries_202 < MAX_RETRIES_202:
                     data = response.json>()
                     wait_time = data.get("retry_after", 5)
                     print(f"Discord is indexing... Wait: {wait_time}s")
@@ -57,7 +58,6 @@ async def get_self():
 async def get_self_servers():
     servers = []
     retries_202 = 0
-    max_retries_202 = 5
 
     url = str(DISCORD_URL) + "/users/@me/guilds"
     headers = {
@@ -76,7 +76,7 @@ async def get_self_servers():
                 continue
 
             elif response.status_code == 202:
-                if retries_202 < max_retries_202:
+                if retries_202 < MAX_RETRIES_202:
                     data = response.json()
                     wait_time = data.get("retry_after", 5)
                     print(f"Discord is indexing... Wait: {wait_time}s")
@@ -105,7 +105,6 @@ async def get_self_servers():
 async def get_user_data(user_id: str, guild_id: str):
     user_data = None
     retries_202 = 0
-    max_retries_202 = 5
     
     url = str(DISCORD_URL) + "/guilds/" + str(guild_id) + "/members/" + str(user_id)
     headers = {
@@ -124,7 +123,7 @@ async def get_user_data(user_id: str, guild_id: str):
                 continue
 
             elif response.status_code == 202:
-                if retries_202 < max_retries_202:
+                if retries_202 < MAX_RETRIES_202:
                     data = response.json>()
                     wait_time = data.get("retry_after", 5)
                     print(f"Discord is indexing... Wait: {wait_time}s")
@@ -151,7 +150,6 @@ async def get_user_data(user_id: str, guild_id: str):
 async def get_server_data(guild_id: str):
     server_data = None
     retries_202 = 0
-    max_retries_202 = 5
     
     url = str(DISCORD_URL) + "/guilds/" + str(guild_id)
     headers = {
@@ -170,7 +168,7 @@ async def get_server_data(guild_id: str):
                 continue
 
             elif response.status_code == 202:
-                if retries_202 < max_retries_202:
+                if retries_202 < MAX_RETRIES_202:
                     data = response.json>()
                     wait_time = data.get("retry_after", 5)
                     print(f"Discord is indexing... Wait: {wait_time}s")
@@ -198,7 +196,6 @@ async def get_server_data(guild_id: str):
 async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25, debug: bool = False):
     all_messages = []
     retries_202 = 0
-    max_retries_202 = 5
 
     url = str(DISCORD_URL) + "/guilds/" + guild_id + "/messages/search"
     headers = {
@@ -237,7 +234,7 @@ async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1",
                 continue
 
             elif response.status_code == 202:
-                if retries_202 < max_retries_202:
+                if retries_202 < MAX_RETRIES_202:
                     wait_time = response.json().get("retry_after", 5)
                     print(f"Discord is indexing... Wait: {wait_time}s")
                     await asyncio.sleep(wait_time)
@@ -268,4 +265,4 @@ async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1",
                 print("Bucket finished. Pausing " + str(reset_after) + "s")
                 await asyncio.sleep(reset_after)
     
-    return all_messages
+    return all_messages, min_id
