@@ -5,6 +5,22 @@ def clean_self_server(elem):
         "server_id": str(elem.get("id"))
     }
 
+def clean_user(elem):
+    server_picture = elem.get("avatar")
+    if server_picture == None:
+        server_picture = elem.get("user", {}).get("avatar")
+
+    return{
+        "server_username": elem.get("nick"),
+        "server_picture": server_picture
+    }
+
+def clean_guild(elem):
+    return{
+        "name": elem.get("name"),
+        "picture": elem.get("icon"),
+    }
+
 def clean_message(elem):
     msg = elem[0]
 
@@ -35,20 +51,4 @@ def clean_message(elem):
         ],
         "responds_to": get_hashed_id(str(msg.get("message_reference", {}).get("message_id"))) 
                        if msg.get("message_reference") else None
-    }
-
-def clean_user(elem):
-    server_picture = elem.get("avatar")
-    if server_picture == None:
-        server_picture = elem.get("user", {}).get("avatar")
-
-    return{
-        "server_username": elem.get("nick"),
-        "server_picture": server_picture
-    }
-
-def clean_guild(elem):
-    return{
-        "name": elem.get("name"),
-        "picture": elem.get("icon"),
     }
