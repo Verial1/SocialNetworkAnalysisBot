@@ -1,7 +1,7 @@
 import discord
 from dotenv import load_dotenv
 import os
-from get_data import get_message_history, get_self, get_self_servers
+from get_data import get_message_history, get_self, get_self_servers, get_user_data, get_server_data
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -16,8 +16,8 @@ client = discord.Client(intents=intents)
 async def on_ready():
     print(f'We have logged in as {client.user}')
     #await get_message_history(guild_id=str(724405288731541526), author_id=str(461637314276360204), limit=25, min_id=str(848592092623929375), debug=True)
-    bot_id = await get_self()
-    print(await get_self_servers())
+    #await get_user_data(user_id=str(461637314276360204), guild_id=str(724405288731541526))
+    await get_server_data(guild_id=str(724405288731541526))
 
 
 @client.event
