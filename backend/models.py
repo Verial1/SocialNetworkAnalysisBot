@@ -41,7 +41,7 @@ class Messages(Base):
     text_content = Column(Text, nullable=True)
     date = Column(DateTime, default=datetime.datetime.now)
     user_id = Column(String(64), nullable=False)
-    server_id = Column(String(64), ForeignKey("servers.server_id", ondelete="CASCADE"), nullable=False)
+    server_id = Column(String(64), nullable=False)
     
     # message_id to which the message responds
     responds_to = Column(String(64), nullable=True)
@@ -50,7 +50,7 @@ class Messages(Base):
     __table_args__ = (
         ForeignKeyConstraint(
             ['user_id', 'server_id'],                # this table's columns
-            ['users.user_id', 'users.server_id'],    # dest cols
+            ['users.user_id', 'servers.server_id'],    # dest cols
             ondelete="CASCADE"
         ),
     )
