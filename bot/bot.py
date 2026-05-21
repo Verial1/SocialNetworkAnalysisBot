@@ -39,9 +39,9 @@ async def on_message(message):
     if message.content.startswith('/consent'):
         res = user_consent(user_id=str(message.author.id), guild_id=str(message.guild.id))
         if res:                                                                                     # remember to change to ping user
-            await message.channel.send('Consent to get ' + str(message.author.name) + '\'s messages granted succesfully.')
+            await message.reply('Consent to get ' + message.author.mention + '\'s messages granted succesfully.')
         else:
-            await message.channel.send('Consent already given by: ' + str(message.author.name))
+            await message.reply('Consent already given by ' + message.author.mention)
 
     if "/revoke" in message.content and "/revokeall" not in message.content and message.content.startswith('/revoke'):
         pattern = r'^/revoke\s+(\d{17,19})'
@@ -54,15 +54,15 @@ async def on_message(message):
     
         res = revoke_user_consent(user_id=str(message.author.id), guild_id=str(guild_id))
         if res:
-            await message.channel.send('Succefully revoked ' + str(message.author.name) + '\'s consent in: ' + str(guild_id))
+            await message.reply('Succefully revoked ' + message.author.mention + '\'s consent in: ' + str(guild_id))
         else:
-            await message.channel.send('No consent has been given in this guild in the past.')
+            await message.reply('No consent has been given in this guild in the past by ' + message.author.mention + '.')
 
     if "/revokeall" in message.content and message.content.startswith('/revokeall'):
         res = revoke_user_consent_all(user_id=str(message.author.id))
         if res:
-            await message.channel.send('Succefully revoked ' + str(message.author.name) + '\'s consent from all servers.')
+            await message.reply('Succefully revoked ' + message.author.mention + '\'s consent from all servers.')
         else:
-            await message.channel.send('No consent has been given in any guild in the past.')
+            await message.reply('No consent has been given in any guild in the past by ' + message.author.mention + '.')
 
 client.run(str(DISCORD_TOKEN))
