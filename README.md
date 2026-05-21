@@ -31,7 +31,7 @@ Current Progress: Environment Fully Configured
 ## PostgreSQL Database Design (4NF)
 The relational schema is normalized to the Fourth Normal Form (4NF) to ensure data integrity and scalability in a multi-tenant environment.
 
-![Database Schema](./docs/postgre_schema.png)
+![Database Schema](./docs/postgre_schema.jpeg)
 
 **Key Features:**
 - **Multi-Tenancy:** Composite Primary Keys (`user_id`, `server_id`) allow for server-specific user profiles (nicknames/avatars).
