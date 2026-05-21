@@ -9,11 +9,19 @@ class Server(BaseModel):
 
     model_config = ConfigDict(extra="ignore")
 
-class User(BaseModel):
+class User_Server(BaseModel):
     user_id: str
     server_id: str
-    server_username: str
-    server_picture: Optional[str] = None
+    server_username: Optional[str]
+    server_picture: Optional[str]
+    latest_message_id: Optional[int]
+
+    model_config = ConfigDict(extra="ignore")
+
+class User(BaseModel):
+    user_id: str
+    username: str
+    picture: Optional[str] = None
 
     model_config = ConfigDict(extra="ignore")
 
@@ -39,3 +47,5 @@ class Message(BaseModel):
     is_processed: Optional[bool] = False
 
     model_config = ConfigDict(extra="ignore")
+
+# UPDATES to have users and servers split

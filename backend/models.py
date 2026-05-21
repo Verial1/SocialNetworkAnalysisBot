@@ -7,14 +7,21 @@ import datetime
 class Users(Base):
     __tablename__ = "users"
 
-    user_id = Column(String(64), nullable=False)
-    server_id = Column(String(64), ForeignKey("servers.server_id", ondelete="CASCADE"), nullable=False)
-    
-    server_username = Column(String, nullable=False)
+    user_id = Column(String(64), primary_key=True)
+ 
+    username = Column(String, nullable=False)
+    picture = Column(String, nullable=True)
+
+class User_Server(Base):
+    __tablename__ = "user_server"
+
+    user_id = Column(String(64))
+    server_id = Column(String(64))
+
+    server_username = Column(String, nullable=True)
     server_picture = Column(String, nullable=True)
     latest_message_id = Column(BigInteger, nullable=True)
 
-    # Composite PK
     __table_args__ = (
         PrimaryKeyConstraint('user_id', 'server_id'),
     )
