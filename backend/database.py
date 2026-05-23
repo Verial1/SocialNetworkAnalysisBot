@@ -4,9 +4,13 @@ import os
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+ENGINE = create_engine(DATABASE_URL)
 Base = declarative_base()
+
+Base.metadata.create_all(ENGINE)
+print("Tables succesfully created!")
+
+SessionLocal = sessionmaker(bind=ENGINE)
 
 def get_db():
     db = SessionLocal()
