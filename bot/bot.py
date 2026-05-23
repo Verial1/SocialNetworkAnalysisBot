@@ -29,7 +29,7 @@ async def on_ready():
     #   unregistered servers -> a
 
 
-
+# DA AGGIUNGERE 'now' come keyword per forzare il delete istantaneo?
 @client.event
 async def on_message(message):
     
