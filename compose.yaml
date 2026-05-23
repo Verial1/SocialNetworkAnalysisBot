@@ -46,8 +46,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://user:password@db_sql:5432/discord_data
-      REDIS_URL: redis://db_redis:6379/0
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
 
   # DISCORD BOT
   bot:
@@ -59,7 +59,7 @@ services:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       DISCORD_URL: ${DISCORD_URL}
       API_URL: http://backend:8000
-      REDIS_URL: redis://db_redis:6379/0
+      REDIS_URL: ${REDIS_URL}
       PYTHONUNBUFFERED: 1
 
   # FRONTEND VUE
@@ -85,4 +85,4 @@ services:
               count: 1
               capabilities: [gpu]
     environment:
-      DATABASE_URL: postgresql://user:password@db_sql:5432/discord_data
+      DATABASE_URL: ${DATABASE_URL}
