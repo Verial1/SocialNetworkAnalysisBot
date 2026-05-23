@@ -3,6 +3,8 @@ import asyncio
 from datetime import datetime
 from dotenv import load_dotenv
 from clean import clean_message, clean_self_server, clean_user, clean_guild
+from security import get_hashed_id
+from redis_connection import r
 import os
 
 load_dotenv()
@@ -35,7 +37,7 @@ async def get_self():
 
             elif response.status_code == 202:
                 if retries_202 < MAX_RETRIES_202:
-                    data = response.json>()
+                    data = response.json()
                     wait_time = data.get("retry_after", 5)
                     print(f"Discord is indexing... Wait: {wait_time}s")
                     await asyncio.sleep(wait_time)
@@ -196,6 +198,10 @@ async def get_server_data(guild_id: str):
 async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25, debug: bool = False):
     all_messages = []
     retries_202 = 0
+    init_min_id = min_id
+
+    u_hash = get_hashed_id(author_id)
+    s_hash = get_hashed_id(guild_id)
 
     url = str(DISCORD_URL) + "/guilds/" + guild_id + "/messages/search"
     headers = {
@@ -211,6 +217,10 @@ async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1",
 
     async with httpx.AsyncClient() as http_client:
         while True:
+            if not r.sismember(f"active_consents:{u_hash}", s_hash):
+                print("Fetch interrupted: consent revoked.")
+                return [], init_min_id
+
             if debug:
                 now = datetime.now().strftime("%H:%M:%S:%f")
                 print("\nRequest time: " + str(now))
@@ -257,7 +267,7 @@ async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1",
 
             else:
                 print("Error: " + str(response.status_code) + " - " + response.text)
-                return []
+                return [], init_min_id
             
             remaining = response.headers.get("X-RateLimit-Remaining")
             if remaining == "0":
