@@ -8,6 +8,7 @@ import redis
 def add_consent(user_id: str, server_id: str):
     u_hash = get_hashed_id(user_id)
     s_hash = get_hashed_id(server_id)
+    
     try: 
         pipe = r.pipeline()
         
@@ -34,12 +35,8 @@ def add_revoke(user_id: str, server_id: str):
 
         if server_id == "all":
             pipe.delete(f"active_consents:{u_hash}")
-            pipe.lpush("revoke_queue", json.dumps({"u_hash": u_hash, "s_hash": "all"}))
         else:
-            # active_consents is useful for tracking messages live
             pipe.srem(f"active_consents:{u_hash}", s_hash)
-            # for postgres revoke at midnight
-            pipe.lpush("revoke_queue", json.dumps({"u_hash": u_hash, "s_hash": s_hash}))
 
         pipe.execute()
         return True
