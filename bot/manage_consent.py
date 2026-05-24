@@ -43,7 +43,10 @@ def add_revoke(user_id: str, server_id: str, immediate: bool = False):
         
         if immediate:
             # bot dovrà fare chiamata al backend per Postgres
-            pass 
+            if server_id == "all":
+                pass
+            else:
+                pass 
         else:
             process_at = time.time() + GRACE_PERIOD
             delete_task = json.dumps({"u": u_hash, "s": s_hash})
