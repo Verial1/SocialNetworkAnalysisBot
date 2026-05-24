@@ -196,6 +196,7 @@ async def get_server_data(guild_id: str):
 # if len(batch) is empty, finished messages (up to date)
 # i get rate limited, why?
 # da fare con i semafori/mutex/lock? Che forse creo più task e devo rispettare i limiti di discord in maniera condivisaS
+# da aggiungere un wait in caso di /revoke così che si da spazio alle altre requests? e se il revoke va in porto si killa ufficialmente, se no se c'è un consent può riprendere
 async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25, debug: bool = False):
     all_messages = []
     retries_202 = 0
