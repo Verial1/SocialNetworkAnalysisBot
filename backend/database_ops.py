@@ -10,4 +10,8 @@ async def delete_user():
 async def delete_user_server():
     pass
 
-async def 
+async def get_users():
+    pass
+
+async def get_user_servers():
+    pass
