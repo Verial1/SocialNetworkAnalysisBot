@@ -17,11 +17,9 @@ async def check_scheduled():
             pipe = r.pipeline()
             for task_json in tasks_to_fetch:
                 pipe.zrem("scheduled_fetches", task_json)
-                # asyncio.create_task(get_message_history(task['s'], task['u']))
 
             for task_json in tasks_to_delete:            
                 pipe.zrem("scheduled_deletes", task_json)
-                # asyncio.create_task(wipe_user_data(task['u'], task['s']))
             pipe.execute()
 
             for task_json in tasks_to_fetch:
