@@ -195,6 +195,7 @@ async def get_server_data(guild_id: str):
 # min_id optional, as such, if a user has just been added with no saved messages (Null in the DB), we can start getting messages from oldest to latest
 # if len(batch) is empty, finished messages (up to date)
 # i get rate limited, why?
+# da fare con i semafori/mutex/lock? Che forse creo più task e devo rispettare i limiti di discord in maniera condivisaS
 async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25, debug: bool = False):
     all_messages = []
     retries_202 = 0
