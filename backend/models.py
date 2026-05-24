@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, BigInteger, Text, DateTime, Boolean, ForeignKey, PrimaryKeyConstraint, ForeignKeyConstraint, SmallInteger, ARRAY, Float, Index
-from database import Base
+from database_connection import Base
 import datetime
 
 # All ids are hashed
