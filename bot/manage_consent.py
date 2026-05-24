@@ -40,6 +40,8 @@ def add_revoke(user_id: str, server_id: str, immediate: bool = False):
             pipe.delete(f"active_consents:{u_hash}")
         else:
             pipe.srem(f"active_consents:{u_hash}", s_hash)
+            fetch_task = json.dumps({"u": user_id, "s": server_id})
+            pipe.zrem("scheduled_fetches", fetch_task)
         
         if immediate:
             # bot dovrà fare chiamata al backend per Postgres
