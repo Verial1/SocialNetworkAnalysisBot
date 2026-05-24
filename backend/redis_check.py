@@ -5,7 +5,8 @@ import time
 import json
 
 # Da controllare se i dati esistono già nel database prima di mandare il fetch
-# Da controllare se c'è qualche 
+# Da controllare se c'è qualche /revoke prima e /consent dopo relativa allo stesso server
+# Da controllare se c'è qualche /revoke all e poi subito dopo /consent (e quel consent specifico se sta nel database), così da eliminare solo gli altri, non tutti
 async def check_scheduled():
     while True:
         try:
@@ -24,9 +25,9 @@ async def check_scheduled():
             pipe.execute()
 
             for task_json in tasks_to_fetch:
-                    task = json.loads(task_json)
-                    # anche se mi sa che lo lancerò sul bot non qui nel backend, voglio mantenere i due separati e il bot si interfaccia con i messaggi
-                    # asyncio.create_task(get_message_history(task['s'], task['u']))
+                task = json.loads(task_json)
+                # anche se mi sa che lo lancerò sul bot non qui nel backend, voglio mantenere i due separati e il bot si interfaccia con i messaggi
+                # asyncio.create_task(get_message_history(task['s'], task['u']))
 
             for task_json in tasks_to_delete:
                 task = json.loads(task_json)
