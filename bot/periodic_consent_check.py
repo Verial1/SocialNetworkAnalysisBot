@@ -1,18 +1,9 @@
-from time import sleep
 from redis_connection import r
 import asyncio
 import time
 import json
-from security import get_hashed_id
 from periodic_utils import adjust_fetches, adjust_deletes, check_future_consents_redis
-#import logging
 
-#logger = logging.getLogger('uvicorn.error')
-#logger.setLevel(logging.DEBUG)
-
-# Da controllare se i dati esistono già nel database prima di mandare il fetch
-# Da controllare se c'è qualche /revoke prima e /consent dopo relativa allo stesso server
-# Da controllare se c'è qualche /revoke all e poi subito dopo /consent (e quel consent specifico se sta nel database), così da eliminare solo gli altri, non tutti
 async def check_scheduled():
     while True:
         try:
@@ -39,8 +30,12 @@ async def check_scheduled():
                 task = json.loads(task_json)
                 task['timestamp'] = score
                 to_adjust_deletes.append(task)
-
+            print("tasks_to_fetch: " + str(tasks_to_fetch))
+            print("tasks_to_delete: " + str(tasks_to_delete))
             fetches, deletes = await adjust_tasks(tasks_to_fetch=to_adjust_fetches, tasks_to_delete=to_adjust_deletes)
+            print("After adjustment:")
+            print("fetches: " + str(fetches))
+            print("deletes: " + str(deletes))
             # chiamate a bot per fetches
             # chiamata a db per deletes
         except Exception as e:

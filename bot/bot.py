@@ -4,6 +4,8 @@ import os
 from get_data import get_message_history, get_self, get_self_servers, get_user_data, get_server_data
 from manage_consent import add_consent, add_revoke
 import re
+from periodic_consent_check import check_scheduled
+import asyncio
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -16,6 +18,10 @@ client = discord.Client(intents=intents)
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
+
+    if not hasattr(client, 'task_runner_started'):
+        asyncio.create_task(check_scheduled())
+        client.task_runner_started = True
 
 
 @client.event

@@ -8,7 +8,7 @@ async def adjust_deletes(tasks_to_fetch: list, tasks_to_delete: list):
     for delete_t in tasks_to_delete:
         # se /revokeall
         if delete_t['s'] == "all":
-            db_servers = [] # await get_servers_from_db(d_task['u'])    # Recupera i server dal DB Postgres
+            db_servers = [] # await get_servers_from_db(d_task['u'])    # in realtà sarebbe da fare una chiamata al backend che poi fa la richiesta al db
             
             # Controllo la lista dei fetch
             for fetch_t in tasks_to_fetch:
@@ -58,7 +58,7 @@ async def adjust_fetches(tasks_to_fetch: list):
 
         # Se l'utente è già nel Database per questo server, il fetch è inutile
         # Usiamo una chiamata al backend
-        already_exists = [] # await check_if_user_exists_in_db(u_h, s_h)
+        already_exists = [] # await check_if_user_exists_in_db(u_h, s_h)    # in realtà sarebbe da fare una chiamata al backend che poi fa la richiesta al db
         
         if not already_exists:
             adjusted_fetches.append(fetch_t)

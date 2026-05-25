@@ -4,18 +4,16 @@ import models
 from periodic_consent_check import check_scheduled
 from contextlib import asynccontextmanager
 import asyncio
-import logging
+#import logging
 
-logger = logging.getLogger('uvicorn.error')
-logger.setLevel(logging.DEBUG)
+#logger = logging.getLogger('uvicorn.error')
+#logger.setLevel(logging.DEBUG)
 
 # Qui defineeremoi cosa succede all'avvio e allo spegnimento
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=ENGINE)
-    logger.debug("test1")
-    asyncio.create_task(check_scheduled())
-    logger.debug("test2")
+
     yield # Qui l'app rimane accesa e funzionante!!
     
     print("Turning off backend...")

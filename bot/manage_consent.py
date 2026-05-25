@@ -4,7 +4,7 @@ import redis
 from security import get_hashed_id
 from redis_connection import r
 
-GRACE_PERIOD = 300 
+GRACE_PERIOD = 10 # put 300 to default
 
 def add_consent(user_id: str, server_id: str):
     u_hash = get_hashed_id(user_id)
