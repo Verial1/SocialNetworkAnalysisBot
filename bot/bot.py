@@ -1,7 +1,7 @@
 import discord
 from dotenv import load_dotenv
 import os
-from bot.get_discord_data import get_message_history, get_self, get_self_servers, get_user_data, get_server_data
+from get_discord_data import get_message_history, get_self, get_self_servers, get_user_data, get_server_data
 from manage_consent import add_consent, add_revoke
 import re
 from periodic_consent_check import check_scheduled
