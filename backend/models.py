@@ -40,20 +40,12 @@ class Messages(Base):
     message_id = Column(String(64), primary_key=True)
     text_content = Column(Text, nullable=True)
     date = Column(DateTime, default=datetime.datetime.now)
-    user_id = Column(String(64), nullable=False)
-    server_id = Column(String(64), nullable=False)
+    user_id = Column(String(64), ForeignKey(Users.user_id), nullable=False)
+    server_id = Column(String(64), ForeignKey(Servers.server_id), nullable=False)
     
     # message_id to which the message responds
     responds_to = Column(String(64), nullable=True)
     is_processed = Column(Boolean, default=False)
-
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ['user_id', 'server_id'],                # this table's columns
-            ['users.user_id', 'servers.server_id'],    # dest cols
-            ondelete="CASCADE"
-        ),
-    )
 
 
 class MultimediaContent(Base):
