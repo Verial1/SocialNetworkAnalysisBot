@@ -44,14 +44,17 @@ def add_revoke(user_id: str, server_id: str, immediate: bool = False):
             pipe.zrem("scheduled_fetches", fetch_task)
         
         if immediate:
-            # bot dovrà fare chiamata al backend per Postgres
+            # bot dovrà fare chiamata al backend per Postgres, oppure mtogliergli il grace_period?
             if server_id == "all":
                 pass
             else:
                 pass 
         else:
             process_at = time.time() + GRACE_PERIOD
-            delete_task = json.dumps({"u": u_hash, "s": s_hash})
+            if server_id == "all":
+                delete_task = json.dumps({"u": u_hash, "s": "all"})
+            else:
+                delete_task = json.dumps({"u": u_hash, "s": u_hash})
             pipe.zadd("scheduled_deletes", {delete_task: process_at})
 
         pipe.execute()
