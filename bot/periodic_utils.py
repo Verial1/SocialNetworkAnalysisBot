@@ -58,7 +58,7 @@ async def adjust_fetches(tasks_to_fetch: list):
 
         # Se l'utente è già nel Database per questo server, il fetch è inutile
         # Usiamo una chiamata al backend
-        already_exists = [] # await check_if_user_exists_in_db(u_h, s_h)    # in realtà sarebbe da fare una chiamata al backend che poi fa la richiesta al db
+        already_exists = True # await check_if_user_exists_in_db(u_h, s_h)    # in realtà sarebbe da fare una chiamata al backend che poi fa la richiesta al db
         
         if not already_exists:
             adjusted_fetches.append(fetch_t)
