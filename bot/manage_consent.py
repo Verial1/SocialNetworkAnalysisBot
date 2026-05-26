@@ -12,7 +12,7 @@ def add_consent(user_id: str, server_id: str):
     try:
         pipe = r.pipeline()
 
-        pipe.sadd(f"active_consents:{u_hash}", s_hash)
+        pipe.sadd(f"active_consents:{user_id}", server_id)
 
         delete_task = json.dumps({"u": u_hash, "s": s_hash})
         pipe.zrem("scheduled_deletes", delete_task)
@@ -37,18 +37,15 @@ def add_revoke(user_id: str, server_id: str, immediate: bool = False):
         pipe = r.pipeline()
         
         if server_id == "all":
-            pipe.delete(f"active_consents:{u_hash}")
+            pipe.delete(f"active_consents:{user_id}")
         else:
-            pipe.srem(f"active_consents:{u_hash}", s_hash)
+            pipe.srem(f"active_consents:{user_id}", server_id)
             fetch_task = json.dumps({"u": user_id, "s": server_id})
             pipe.zrem("scheduled_fetches", fetch_task)
         
         if immediate:
-            # bot dovrà fare chiamata al backend per Postgres, oppure mtogliergli il grace_period?
-            if server_id == "all":
-                pass
-            else:
-                pass 
+            # bot dovrà fare chiamata al backend per Postgres, oppure mtogliergli il grace_period? # await delete_user_data(u_hash, s_hash)
+            pass 
         else:
             process_at = time.time() + GRACE_PERIOD
             if server_id == "all":
