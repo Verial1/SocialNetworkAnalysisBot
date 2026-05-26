@@ -4,8 +4,10 @@ import os
 from get_discord_data import get_message_history, get_self, get_self_servers, get_user_data, get_server_data
 from manage_consent import add_consent, add_revoke
 import re
-from periodic_consent_check import check_scheduled
+from periodic_scheduled_check import check_scheduled
 import asyncio
+import datetime
+from redis_connection import r
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -18,6 +20,8 @@ client = discord.Client(intents=intents)
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
+
+    client.session_start_id = discord.utils.time_snowflake(datetime.now())
 
     if not hasattr(client, 'task_runner_started'):
         asyncio.create_task(check_scheduled())
@@ -61,5 +65,10 @@ async def on_message(message):
             await message.reply('Succefully revoked ' + message.author.mention + '\'s consent from all servers.')
         else:
             await message.reply('Error in revoking consent. Please retry.')
+
+    # If message from someone who consented
+    if r.sismember(f"active_consents:{message.author.id}", str(message.guild.id)):
+        pass
+        # bisogna pulire il messaggio, e mandarlo al backend
 
 client.run(str(DISCORD_TOKEN))

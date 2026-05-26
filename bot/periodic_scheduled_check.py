@@ -36,8 +36,8 @@ async def check_scheduled():
             print("After adjustment:")
             print("fetches: " + str(fetches))
             print("deletes: " + str(deletes))
-            # chiamate a bot per fetches
-            # chiamata a db per deletes
+            # chiamate a bot per fetches    per ogni fetch: await execute_fetch()
+            # chiamata a db per deletes     per ogni delete: awaut delete_user_data()
         except Exception as e:
             print(f"Error in task runner: {e}")
 
@@ -51,3 +51,25 @@ async def adjust_tasks(tasks_to_fetch: list, tasks_to_delete: list):
     
     # Ritorna le liste aggiustate
     return f_list, d_list
+
+async def execute_fetch(task_data):
+    task = json.loads(task_data)
+
+    messages, last_id_reached = await get_message_history(
+        guild_id=task['s'],
+        author_id=task['u'],
+        message_id=task.get('message_id', "-1"),
+        order=task.get('order', "desc"),
+        stop_id=task.get('stop_id', None),
+    )
+
+    # fare una struttura dati con
+    #   guild_id (hashato)
+    #   author_id (hashato)
+    #   lista di messaggi (messages)
+    #   last_id_reached
+
+    if messages:
+        pass
+        # Invia al backend (in blocco!)
+        # await backend_api.send_bulk_messages(data)
