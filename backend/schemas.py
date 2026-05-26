@@ -14,6 +14,7 @@ class User_Server(BaseModel):
     server_id: str
     server_username: Optional[str]
     server_picture: Optional[str]
+    oldest_message_id: Optional[int]
     latest_message_id: Optional[int]
 
     model_config = ConfigDict(extra="ignore")

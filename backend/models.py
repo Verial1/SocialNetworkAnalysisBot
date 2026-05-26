@@ -20,6 +20,7 @@ class User_Server(Base):
 
     server_username = Column(String, nullable=True)
     server_picture = Column(String, nullable=True)
+    oldest_message_id = Column(BigInteger, nullable=True)
     latest_message_id = Column(BigInteger, nullable=True)
 
     __table_args__ = (
