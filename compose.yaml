@@ -18,9 +18,6 @@ services:
     restart: always
     environment:
       NEO4J_AUTH: neo4j/password_segreta
-    ports:
-      - "7474:7474" # Dashboard per vedere i grafi
-      - "7687:7687" # Connessione Python
     volumes:
       - ./neo4j_data:/data
 
@@ -29,8 +26,6 @@ services:
     container_name: redis_db
     restart: always
     command: redis-server --save 60 1 --loglevel warning
-    ports:
-      - "6379:6379"
     volumes:
       - ./redis_data:/data
 
