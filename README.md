@@ -81,6 +81,10 @@ This project will implement Privacy by Design:
 
 Initial tests of the code will be perfomed on users' messages who have explicitly given consent.
 
+## Security
+
+This project uses Docker to maximise isolation of the code and database. Login methods will be implemented to ensure highest security, avoiding unauthorized access to data.
+
 ## How to Run (Development)
 
 Still to define
@@ -90,7 +94,7 @@ Still to define
 - [x] Infrastructure setup (WSL2, Docker, CUDA Passthrough)
 - [x] Database Schema design (PostgreSQL)
 - [ ] API Development (FastAPI)
-- [ ] Discord Bot Gateway & Consent Management
+- [x] Discord Bot Gateway & Consent Management
 - [ ] Database Schema design (Neo4j)
 - [ ] Batch Analysis Engine (NLP/CV Integration)
 - [ ] LLM Fine-tuning for Style Imitation
