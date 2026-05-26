@@ -3,7 +3,6 @@ import asyncio
 from datetime import datetime
 from dotenv import load_dotenv
 from clean import clean_message, clean_self_server, clean_user, clean_guild
-from security import get_hashed_id
 from redis_connection import r
 import os
 
@@ -113,7 +112,7 @@ async def get_user_data(user_id: str, guild_id: str):
         "Authorization": "Bot " + str(DISCORD_TOKEN)
     }
     params = {}
-
+    
     async with httpx.AsyncClient() as http_client:
         while True:
             response = await http_client.get(url, headers=headers, params=params)
@@ -197,13 +196,10 @@ async def get_server_data(guild_id: str):
 # i get rate limited, why?
 # da fare con i semafori/mutex/lock? Che forse creo più task e devo rispettare i limiti di discord in maniera condivisaS
 # da aggiungere un wait in caso di /revoke così che si da spazio alle altre requests? e se il revoke va in porto si killa ufficialmente, se no se c'è un consent può riprendere
-async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1", limit: int = 25, debug: bool = False):
+async def get_message_history(guild_id: str, author_id: str, message_id: str = "-1", limit: int = 25, order: str = "asc", stop_id = None, debug: bool = False,):
     all_messages = []
     retries_202 = 0
-    init_min_id = min_id
-
-    u_hash = get_hashed_id(author_id)
-    s_hash = get_hashed_id(guild_id)
+    current_id = message_id
 
     url = str(DISCORD_URL) + "/guilds/" + guild_id + "/messages/search"
     headers = {
@@ -212,16 +208,21 @@ async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1",
     params = {
         "author_id": author_id,
         "limit": limit,
-        "sort_order": "asc",
     }
-    if(min_id != "-1"):
-        params["min_id"] = min_id
+    if(message_id != "-1"):
+        if order == "asc":
+            params["min_id"] = current_id
+            if stop_id:
+                params["max_id"] = stop_id    
+        else:
+            params["max_id"] = current_id
 
     async with httpx.AsyncClient() as http_client:
         while True:
-            if not r.sismember(f"active_consents:{u_hash}", s_hash):
+            # checks if redis consent is still active
+            if not r.sismember(f"active_consents:{author_id}", guild_id):
                 print("Fetch interrupted: consent revoked.")
-                return [], init_min_id
+                return [], current_id
 
             if debug:
                 now = datetime.now().strftime("%H:%M:%S:%f")
@@ -241,7 +242,7 @@ async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1",
 
             if response.status_code == 429:
                 data = response.json()
-                wait_time = data.get("retry_after", 5)
+                wait_time = data.get("retry_after", 5) + 0.5
                 await asyncio.sleep(wait_time)
                 continue
 
@@ -260,16 +261,15 @@ async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1",
                 batch = response.json().get("messages", [])
                 if(len(batch) == 0):
                     break
-                min_id = batch[-1][0]["id"]
+                current_id = batch[-1][0]["id"]
                 for elem in batch:
                     cleaned = clean_message(elem)
                     all_messages.append(cleaned)
-                params["min_id"] = min_id
                 retries_202 = 0
 
             else:
                 print("Error: " + str(response.status_code) + " - " + response.text)
-                return [], init_min_id
+                return [], current_id
             
             remaining = response.headers.get("X-RateLimit-Remaining")
             if remaining == "0":
@@ -277,4 +277,4 @@ async def get_message_history(guild_id: str, author_id: str, min_id: str = "-1",
                 print("Bucket finished. Pausing " + str(reset_after) + "s")
                 await asyncio.sleep(reset_after)
     
-    return all_messages, min_id
+    return all_messages, message_id
