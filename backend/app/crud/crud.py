@@ -1,24 +1,22 @@
 import app.models.models as models
 
+# DA USARE SQLALCHEMY ASYNC (ATTUALMENTE STO USANDO LA VERSIONE SYNC)
+
 async def insert_messages():
     pass
 
 async def insert_message():
     pass
 
-# DA AGGIUNGERE TRY EXCEPT!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 async def get_user_servers(user_id: str, db):
     results = db.query(models.Users.server_id).filter(models.Users.user_id == user_id).all()
-
     return [r[0] for r in results]
 
 async def get_user_consent(user_id: str, server_id: str, db):
-    exists = db.query(models.Users).filter(
+    return db.query(models.Users).filter(
         models.Users.user_id == user_id,
         models.Users.server_id == server_id
-    ).first() is not None
-
-    return exists
+    ).first() 
 
 async def remove_consent(user_id: str, server_id: str, db):
     if server_id == "all":
@@ -32,11 +30,10 @@ async def remove_consent(user_id: str, server_id: str, db):
         )
         
     if not query.first():
-        return "404"
+        return False
         
     query.delete(synchronize_session=False)
 
-    db.commit()
     return "success"
 
 async def get_user_latest_message(user_id: str, server_id: str, db):
@@ -46,6 +43,6 @@ async def get_user_latest_message(user_id: str, server_id: str, db):
     ).first()
 
     if not res:
-        return "404"
+        return None
 
     return res.latest_message_id

@@ -11,7 +11,7 @@ router = APIRouter(
 @router.get("/latest_id")
 async def get_latest_id(user_id: str, server_id: str, db: Session = Depends(get_db)):
     res = crud.get_user_latest_message(user_id = user_id, server_id = server_id, db = db)
-    if res == "404":
+    if res is None:
         raise HTTPException(status_code=404, detail="User/Server relation not found")
     
     return {
