@@ -1,6 +1,6 @@
-from security import get_hashed_id
+from bot.core.security import get_hashed_id
 import json
-from redis_connection import r
+from bot.core.redis_connection import r
 
 async def adjust_deletes(tasks_to_fetch: list, tasks_to_delete: list):
     adjusted_deletes = []

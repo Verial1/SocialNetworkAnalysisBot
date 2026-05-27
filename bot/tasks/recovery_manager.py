@@ -1,5 +1,5 @@
-from redis_connection import r
-from security import get_hashed_id
+from bot.core.redis_connection import r
+from bot.core.security import get_hashed_id
 import json
 import time
 

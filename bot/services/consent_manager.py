@@ -1,8 +1,8 @@
 import json
 import time
 import redis
-from security import get_hashed_id
-from redis_connection import r
+from bot.core.security import get_hashed_id
+from bot.core.redis_connection import r
 
 GRACE_PERIOD = 10 # put 300 to default
 

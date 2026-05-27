@@ -1,4 +1,4 @@
-from security import get_hashed_id
+from bot.core.security import get_hashed_id
 
 def clean_self_server(elem):
     return {

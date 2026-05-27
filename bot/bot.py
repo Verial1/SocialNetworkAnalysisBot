@@ -1,13 +1,13 @@
 import discord
 from dotenv import load_dotenv
 import os
-from get_discord_data import get_message_history, get_self, get_self_servers, get_user_data, get_server_data
-from manage_consent import add_consent, add_revoke
+from services.discord_api import get_message_history, get_self, get_self_servers, get_user_data, get_server_data
+from services.consent_manager import add_consent, add_revoke
 import re
-from periodic_scheduled_check import check_scheduled
+from tasks.scheduler import check_scheduled
 import asyncio
 import datetime
-from redis_connection import r
+from bot.core.redis_connection import r
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")

@@ -1,8 +1,8 @@
-from redis_connection import r
+from bot.core.redis_connection import r
 import asyncio
 import time
 import json
-from periodic_utils import adjust_fetches, adjust_deletes, check_future_consents_redis
+from utils.scheduler_logic import adjust_fetches, adjust_deletes, check_future_consents_redis
 
 async def check_scheduled():
     while True:

@@ -2,8 +2,8 @@ import httpx
 import asyncio
 from datetime import datetime
 from dotenv import load_dotenv
-from clean import clean_message, clean_self_server, clean_user, clean_guild
-from redis_connection import r
+from utils.formatters import clean_message, clean_self_server, clean_user, clean_guild
+from bot.core.redis_connection import r
 import os
 
 load_dotenv()

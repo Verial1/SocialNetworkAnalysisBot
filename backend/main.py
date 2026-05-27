@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Depends, HTTPException
-from database_connection import ENGINE, Base, get_db
-import models
+from app.db.database import ENGINE, Base, get_db
+import app.models.models as models
 from contextlib import asynccontextmanager
 import asyncio
-import schemas
+import app.schemas.schemas as schemas
 from sqlalchemy.orm import Session
 #import logging
 
@@ -24,6 +24,8 @@ app = FastAPI(title="SNA Bot API", lifespan=lifespan)
 @app.get("/")
 async def root():
     return {"status": "running", "anonymization": "active"}
+
+# RICORDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA metti le query nelle funzioni crud.py così snelliamo il codice
 
 # --- Endpoint per get_user_servers ---
 @app.get("/users/{user_id}/servers")
